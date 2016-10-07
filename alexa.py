@@ -23,7 +23,8 @@ class Site(object):
         self.baseURL   = "http://www.alexa.com/topsites/global;"
         self.timeout   = 5 #seconds
         self.totalPage = 20 #0-19
-        self.domain    = []
+        #self.domain    = []
+        self.domain = multiprocessing.Manager().list()
         self.ipaddr    = []
     def getURList(self, page):
         """Get all the domains of the page"""
@@ -80,7 +81,6 @@ class Site(object):
         """
         Using multiprocess.
         """
-        self.domain = multiprocessing.Manager().list()
         start = time.time()
         processes = []
         for page in xrange(self.totalPage):
