@@ -47,65 +47,67 @@ class Site(object):
         except Exception, e:
             print traceback.format_exc(e)
 
+    def common(self):
+        """
+        usual method with for ... in xrange.
+        """
+        start = time.time()
+        for page in xrange(self.totalPage):
+            self.getURList(page)
+        end = time.time()
+        print "***" * 10 + "common" + "***" * 10
+        print "Total domains: {0}".format(len(self.domain))
+        print "Total used %0.2f seconds." % (end - start)
 
-def common():
-    start = time.time()
-    site = Site()
-    for page in xrange(site.totalPage):
-        site.getURList(page)
-    end = time.time()
-    print "***" * 10 + "common" + "***" * 10
-    print "Total domains: {0}".format(len(site.domain))
-    print "Total used %0.2f seconds." % (end - start)
+    def multithread(self):
+        """
+        Using multithread.
+        """
+        start = time.time()
+        threads = []
+        for page in xrange(self.totalPage):
+            t = threading.Thread(target=self.getURList, args=(page,))
+            t.start()
+            threads.append(t)
+        for thread in threads:
+            thread.join()
+        end = time.time()
+        print "***" * 10 + "multithreading" + "***" * 10
+        print "Total domains: {0}".format(len(self.domain))
+        print "Total used %0.2f seconds." % (end - start)
 
-def multithread():
-    start = time.time()
-    site = Site()
-    threads = []
-    for page in xrange(site.totalPage):
-        t = threading.Thread(target=site.getURList, args=(page,))
-        t.start()
-        threads.append(t)
-    for thread in threads:
-        thread.join()
-    end = time.time()
-    print "***" * 10 + "multithreading" + "***" * 10
-    print "Total domains: {0}".format(len(site.domain))
-    print "Total used %0.2f seconds." % (end - start)
+    def multiprocess(self):
+        """
+        Using multiprocess.
+        """
+        self.domain = multiprocessing.Manager().list()
+        start = time.time()
+        processes = []
+        for page in xrange(self.totalPage):
+            p = multiprocessing.Process(target=self.getURList, args=(page,))
+            p.start()
+            processes.append(p)
+        for process in processes:
+            process.join()
+        end = time.time()
+        print "***" * 10 + "multiprocessing" + "***" * 10
+        print "Total domains: {0}".format(len(self.domain))
+        print "Total used %0.2f seconds." % (end - start)
 
-def multiprocess():
-    start = time.time()
-    site  = Site()
-    processes = []
-    for page in xrange(site.totalPage):
-        p = multiprocessing.Process(target=site.getURList, args=(page,))
-        p.start()
-        processes.append(p)
-        print "page: {0} was added".format(page)
-    for process in processes:
-        process.join()
-    end = time.time()
-    print "***" * 10 + "multiprocessing" + "***" * 10
-    print "Total domains: {0}".format(len(site.domain))
-    print "Total used %0.2f seconds." % (end - start)
-
-def gevt():
-    start = time.time()
-    site  = Site()
-    threads = []
-    for page in xrange(site.totalPage):
-        threads.append(gevent.spawn(site.getURList, page))
-    gevent.joinall(threads)
-    end = time.time()
-    print "***" * 10 + "gevent" + "***" * 10
-    print "Total domains: {0}".format(len(site.domain))
-    print "Total used %0.2f seconds." % (end - start)
+    def gevt(self):
+        start = time.time()
+        greeenlets = []
+        for page in xrange(self.totalPage):
+            greenlets.append(gevent.spawn(self.getURList, page))
+        gevent.joinall(greenlets)
+        end = time.time()
+        print "***" * 10 + "gevent" + "***" * 10
+        print "Total domains: {0}".format(len(self.domain))
+        print "Total used %0.2f seconds." % (end - start)
 
 
 if __name__ == "__main__":
-    def t(x):
-        return x
-    #common()
-    multithread()
-    multiprocess()
-    gevt()
+    site = Site()
+    #site.common()
+    #site.multithread()
+    site.multiprocess()
