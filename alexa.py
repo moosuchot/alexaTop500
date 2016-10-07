@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 import gevent
 from gevent import monkey
 monkey.patch_socket()
@@ -19,17 +19,17 @@ class Site(object):
     and resovle the domain names contains in the page.
     """
     def __init__(self):
-        #"http://www.alexa.com/topsites/global;[0-19]"
-        self.baseURL   = "http://www.alexa.com/topsites/global;"
-        self.timeout   = 5 #seconds
-        self.totalPage = 20 #0-19
-        self.domain    = []
-        self.ipaddr    = []
+        # "http://www.alexa.com/topsites/global;[0-19]"
+        self.baseURL = "http://www.alexa.com/topsites/global;"
+        self.timeout = 5  # seconds
+        self.totalPage = 20  # 0-19
+        self.domain = []
+        self.ipaddr = []
+
     def getURList(self, page):
         """Get all the domains of the page"""
-        urList  = []
+        urList = []
         req = requests.get(self.baseURL+str(page))
-        #req = requests.get(self.baseURL+str(page), proxies={"http": "socks5://127.0.0.1:1080"})
         soup = BeautifulSoup(req.text, "lxml")
         lst = soup.find_all(class_="site-listing")
         for l in lst:
@@ -42,7 +42,7 @@ class Site(object):
         """
         try:
             ret = socket.getaddrinfo(domain, 80, 2, 1, 6)
-            ip  = ret[0][4][0]
+            ip = ret[0][4][0]
             self.ipaddr.append(ip)
         except Exception, e:
             print traceback.format_exc(e)
@@ -63,7 +63,7 @@ class Site(object):
         """
         Using multithread.
         """
-        self.domain = [] #clear it before run
+        self.domain = []  # clear it before run
         start = time.time()
         threads = []
         for page in xrange(self.totalPage):
@@ -115,5 +115,5 @@ if __name__ == "__main__":
     site = Site()
     site.common()
     site.multithread()
-    #site.multiprocess()
+    # site.multiprocess()
     site.gevt()
