@@ -63,6 +63,7 @@ class Site(object):
         """
         Using multithread.
         """
+        self.domain = [] #clear it before run
         start = time.time()
         threads = []
         for page in xrange(self.totalPage):
@@ -98,6 +99,7 @@ class Site(object):
         """
         Using gevent.
         """
+        self.domain = []
         start = time.time()
         greenlets = []
         for page in xrange(self.totalPage):
@@ -113,5 +115,5 @@ if __name__ == "__main__":
     site = Site()
     site.common()
     site.multithread()
-    site.multiprocess()
+    #site.multiprocess()
     site.gevt()
