@@ -111,7 +111,7 @@ class Site(object):
 
 if __name__ == "__main__":
     site = Site()
-    #site.common()
-    #site.multithread()
-    #site.multiprocess()
+    site.common()
+    site.multithread()
+    site.multiprocess()
     site.gevt()
