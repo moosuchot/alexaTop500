@@ -15,8 +15,8 @@ from bs4 import BeautifulSoup
 class Site(object):
     """
         To test the advantage of the gevent compared to multithreading,
-    I crawled the http://www.alexa.com/topsites/global and resovle the
-    domain names contains in the page.
+    multiprocessing,I crawled the http://www.alexa.com/topsites/global
+    and resovle the domain names contains in the page.
     """
     def __init__(self):
         #"http://www.alexa.com/topsites/global;[0-19]"
@@ -24,7 +24,6 @@ class Site(object):
         self.timeout   = 5 #seconds
         self.totalPage = 20 #0-19
         self.domain    = []
-        #self.domain = multiprocessing.Manager().list()
         self.ipaddr    = []
     def getURList(self, page):
         """Get all the domains of the page"""
@@ -81,6 +80,7 @@ class Site(object):
         """
         Using multiprocess.
         """
+        self.domain = multiprocessing.Manager().list()
         start = time.time()
         processes = []
         for page in xrange(self.totalPage):
