@@ -5,7 +5,7 @@ Screwling the top 500 websites of the http://www.alexa.com/topsites/global;0 ,ju
 
 ---
 
-&emsp;Before 10.1 holidays,I attend Alibaba's Interview through  telephone,one of the asked questions is about `gevent`, and I was used it in my work at all,so I learn it the whole holidays.This is a small python script to compare gevent with multiprocessing and multithreading.Any better ideas,just give me an issue,thanks.
+&emsp;Before 10.1 holidays,I attend Alibaba's Interview through  telephone,one of the asked questions is about `gevent`, and I was not used it in my work at all,so I learn it the whole holidays.This is a small python script to compare gevent with multiprocessing and multithreading.Any better ideas,just give me an issue,thanks.
 
 ####Usage
 
