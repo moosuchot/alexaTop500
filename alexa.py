@@ -66,7 +66,6 @@ def multithread():
         t = threading.Thread(target=site.getURList, args=(page,))
         t.start()
         threads.append(t)
-        print "page: {0} was added".format(page)
     for thread in threads:
         thread.join()
     end = time.time()
@@ -77,11 +76,14 @@ def multithread():
 def multiprocess():
     start = time.time()
     site  = Site()
-    pool  = multiprocessing.Pool(processes=4)
-    #pool.map_async(site.getURList, xrange(site.totalPage))
-    pool.map_async(t(x), range(site.totalPage))
-    pool.close()
-    pool.join()
+    processes = []
+    for page in xrange(site.totalPage):
+        p = multiprocessing.Process(target=site.getURList, args=(page,))
+        p.start()
+        processes.append(p)
+        print "page: {0} was added".format(page)
+    for process in processes:
+        process.join()
     end = time.time()
     print "***" * 10 + "multiprocessing" + "***" * 10
     print "Total domains: {0}".format(len(site.domain))
@@ -105,5 +107,5 @@ if __name__ == "__main__":
         return x
     #common()
     multithread()
-    #multiprocess()
+    multiprocess()
     gevt()
