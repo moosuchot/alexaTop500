@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 #coding:utf-8
+import gevent
+from gevent import monkey
+monkey.patch_socket()
 import time
 import socket
 import traceback
@@ -7,9 +10,6 @@ import threading
 import multiprocessing
 import requests
 from bs4 import BeautifulSoup
-import gevent
-from gevent import monkey
-monkey.patch_socket()
 
 
 class Site(object):
@@ -23,8 +23,8 @@ class Site(object):
         self.baseURL   = "http://www.alexa.com/topsites/global;"
         self.timeout   = 5 #seconds
         self.totalPage = 20 #0-19
-        #self.domain    = []
-        self.domain = multiprocessing.Manager().list()
+        self.domain    = []
+        #self.domain = multiprocessing.Manager().list()
         self.ipaddr    = []
     def getURList(self, page):
         """Get all the domains of the page"""
@@ -95,8 +95,11 @@ class Site(object):
         print "Total used %0.2f seconds." % (end - start)
 
     def gevt(self):
+        """
+        Using gevent.
+        """
         start = time.time()
-        greeenlets = []
+        greenlets = []
         for page in xrange(self.totalPage):
             greenlets.append(gevent.spawn(self.getURList, page))
         gevent.joinall(greenlets)
@@ -110,4 +113,5 @@ if __name__ == "__main__":
     site = Site()
     #site.common()
     #site.multithread()
-    site.multiprocess()
+    #site.multiprocess()
+    site.gevt()
